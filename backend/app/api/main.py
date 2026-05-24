@@ -3,7 +3,6 @@ from fastapi import APIRouter
 from app.api.routes import items, login, private, users, utils
 from app.core.config import settings
 from app.api.routes import terms
-from backend import app
 
 api_router = APIRouter()
 api_router.include_router(login.router)

@@ -9,7 +9,7 @@ function Terms() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["terms"],
     queryFn: async () => {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/terms`)
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/terms`)
       return res.json()
     },
   })
