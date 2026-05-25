@@ -45,6 +45,10 @@ class UpdatePassword(SQLModel):
     new_password: str = Field(min_length=8, max_length=128)
 
 
+class UserCourseLink(SQLModel, table=True):
+    user_id: uuid.UUID = Field(foreign_key="user.id", primary_key=True)
+    course_id: uuid.UUID = Field(foreign_key="course.id", primary_key=True)
+
 # Database model, database table inferred from class name
 class User(UserBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
@@ -54,6 +58,10 @@ class User(UserBase, table=True):
         sa_type=DateTime(timezone=True),  # type: ignore
     )
     items: list["Item"] = Relationship(back_populates="owner", cascade_delete=True)
+    courses: list["Course"] = Relationship(
+        back_populates="users",
+        link_model=UserCourseLink
+    )
 
 
 # Properties to return via API, id is always required
@@ -140,6 +148,11 @@ class Course(CourseBase, table=True):
         sa_column_kwargs={"server_default": func.gen_random_uuid()}
     )
     task_types: list["TaskType"] = Relationship(back_populates="course")
+
+    users: list["User"] = Relationship(
+        back_populates="courses",
+        link_model=UserCourseLink
+    )
 
 class TaskTypeBase(SQLModel):
     name: str = Field(min_length=1, max_length=255)
