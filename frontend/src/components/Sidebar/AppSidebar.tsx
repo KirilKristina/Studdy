@@ -11,6 +11,7 @@ import {
 import useAuth from "@/hooks/useAuth"
 import { type Item, Main } from "./Main"
 import { User } from "./User"
+import { SidebarSettings } from "@/components/Common/Settings"
 
 const baseItems: Item[] = [
   { icon: Home, title: "Dashboard", path: "/" },
@@ -32,8 +33,12 @@ export function AppSidebar() {
       <SidebarContent>
         <Main items={items} />
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="gap-4 p-4">
+
+
+        <SidebarSettings />
         <SidebarAppearance />
+
         <User user={currentUser} />
       </SidebarFooter>
     </Sidebar>

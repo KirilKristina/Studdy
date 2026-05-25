@@ -119,7 +119,7 @@ function Login() {
                   <FormControl>
                     <PasswordInput
                       data-testid="password-input"
-                      placeholder="Password"
+                      placeholder={t("login.password")}
                       {...field}
                     />
                   </FormControl>

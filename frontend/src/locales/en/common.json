@@ -8,6 +8,16 @@
     "signup": "Sign Up",
     "forgotPassword": "Forgot password?"
     
+  },
+  "signup": {
+    "fullname": "Full Name",
+    "xmplname": "John Doe",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "signup": "Sign Up",
+    "haveAccount": "Already have an account?",
+    "login": "Log In"
   }
   
 }

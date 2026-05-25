@@ -9,22 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RecoverPasswordRouteImport } from './routes/recover-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
+import { Route as LayoutTermsRouteImport } from './routes/_layout/terms'
+import { Route as LayoutTermRouteImport } from './routes/_layout/term'
+import { Route as LayoutTasksRouteImport } from './routes/_layout/tasks'
+import { Route as LayoutTaskRouteImport } from './routes/_layout/task'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 import { Route as LayoutItemsRouteImport } from './routes/_layout/items'
 import { Route as LayoutAdminRouteImport } from './routes/_layout/admin'
 
-const TermsRoute = TermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -54,6 +52,26 @@ const LayoutIndexRoute = LayoutIndexRouteImport.update({
   path: '/',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutTermsRoute = LayoutTermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutTermRoute = LayoutTermRouteImport.update({
+  id: '/term',
+  path: '/term',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutTasksRoute = LayoutTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutTaskRoute = LayoutTaskRouteImport.update({
+  id: '/task',
+  path: '/task',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutSettingsRoute = LayoutSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -76,20 +94,26 @@ export interface FileRoutesByFullPath {
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
-  '/terms': typeof TermsRoute
   '/admin': typeof LayoutAdminRoute
   '/items': typeof LayoutItemsRoute
   '/settings': typeof LayoutSettingsRoute
+  '/task': typeof LayoutTaskRoute
+  '/tasks': typeof LayoutTasksRoute
+  '/term': typeof LayoutTermRoute
+  '/terms': typeof LayoutTermsRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
-  '/terms': typeof TermsRoute
   '/admin': typeof LayoutAdminRoute
   '/items': typeof LayoutItemsRoute
   '/settings': typeof LayoutSettingsRoute
+  '/task': typeof LayoutTaskRoute
+  '/tasks': typeof LayoutTasksRoute
+  '/term': typeof LayoutTermRoute
+  '/terms': typeof LayoutTermsRoute
   '/': typeof LayoutIndexRoute
 }
 export interface FileRoutesById {
@@ -99,10 +123,13 @@ export interface FileRoutesById {
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
-  '/terms': typeof TermsRoute
   '/_layout/admin': typeof LayoutAdminRoute
   '/_layout/items': typeof LayoutItemsRoute
   '/_layout/settings': typeof LayoutSettingsRoute
+  '/_layout/task': typeof LayoutTaskRoute
+  '/_layout/tasks': typeof LayoutTasksRoute
+  '/_layout/term': typeof LayoutTermRoute
+  '/_layout/terms': typeof LayoutTermsRoute
   '/_layout/': typeof LayoutIndexRoute
 }
 export interface FileRouteTypes {
@@ -113,20 +140,26 @@ export interface FileRouteTypes {
     | '/recover-password'
     | '/reset-password'
     | '/signup'
-    | '/terms'
     | '/admin'
     | '/items'
     | '/settings'
+    | '/task'
+    | '/tasks'
+    | '/term'
+    | '/terms'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
     | '/recover-password'
     | '/reset-password'
     | '/signup'
-    | '/terms'
     | '/admin'
     | '/items'
     | '/settings'
+    | '/task'
+    | '/tasks'
+    | '/term'
+    | '/terms'
     | '/'
   id:
     | '__root__'
@@ -135,10 +168,13 @@ export interface FileRouteTypes {
     | '/recover-password'
     | '/reset-password'
     | '/signup'
-    | '/terms'
     | '/_layout/admin'
     | '/_layout/items'
     | '/_layout/settings'
+    | '/_layout/task'
+    | '/_layout/tasks'
+    | '/_layout/term'
+    | '/_layout/terms'
     | '/_layout/'
   fileRoutesById: FileRoutesById
 }
@@ -148,18 +184,10 @@ export interface RootRouteChildren {
   RecoverPasswordRoute: typeof RecoverPasswordRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignupRoute: typeof SignupRoute
-  TermsRoute: typeof TermsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -202,6 +230,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutIndexRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/terms': {
+      id: '/_layout/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof LayoutTermsRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/term': {
+      id: '/_layout/term'
+      path: '/term'
+      fullPath: '/term'
+      preLoaderRoute: typeof LayoutTermRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/tasks': {
+      id: '/_layout/tasks'
+      path: '/tasks'
+      fullPath: '/tasks'
+      preLoaderRoute: typeof LayoutTasksRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/task': {
+      id: '/_layout/task'
+      path: '/task'
+      fullPath: '/task'
+      preLoaderRoute: typeof LayoutTaskRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/settings': {
       id: '/_layout/settings'
       path: '/settings'
@@ -230,6 +286,10 @@ interface LayoutRouteChildren {
   LayoutAdminRoute: typeof LayoutAdminRoute
   LayoutItemsRoute: typeof LayoutItemsRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
+  LayoutTaskRoute: typeof LayoutTaskRoute
+  LayoutTasksRoute: typeof LayoutTasksRoute
+  LayoutTermRoute: typeof LayoutTermRoute
+  LayoutTermsRoute: typeof LayoutTermsRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
 }
 
@@ -237,6 +297,10 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAdminRoute: LayoutAdminRoute,
   LayoutItemsRoute: LayoutItemsRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
+  LayoutTaskRoute: LayoutTaskRoute,
+  LayoutTasksRoute: LayoutTasksRoute,
+  LayoutTermRoute: LayoutTermRoute,
+  LayoutTermsRoute: LayoutTermsRoute,
   LayoutIndexRoute: LayoutIndexRoute,
 }
 
@@ -249,7 +313,6 @@ const rootRouteChildren: RootRouteChildren = {
   RecoverPasswordRoute: RecoverPasswordRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SignupRoute: SignupRoute,
-  TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

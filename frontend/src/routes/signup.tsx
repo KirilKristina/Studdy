@@ -20,6 +20,8 @@ import { LoadingButton } from "@/components/ui/loading-button"
 import { PasswordInput } from "@/components/ui/password-input"
 import useAuth, { isLoggedIn } from "@/hooks/useAuth"
 
+import { useTranslation } from "react-i18next"
+
 const formSchema = z
   .object({
     email: z.email(),
@@ -58,6 +60,7 @@ export const Route = createFileRoute("/signup")({
 })
 
 function SignUp() {
+  const { t } = useTranslation()
   const { signUpMutation } = useAuth()
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -96,11 +99,11 @@ function SignUp() {
               name="full_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+                  <FormLabel>{t("signup.fullname")}</FormLabel>
                   <FormControl>
                     <Input
                       data-testid="full-name-input"
-                      placeholder="User"
+                      placeholder={t("signup.xmplname")}
                       type="text"
                       {...field}
                     />
@@ -115,7 +118,7 @@ function SignUp() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{t("signup.email")}</FormLabel>
                   <FormControl>
                     <Input
                       data-testid="email-input"
@@ -134,11 +137,11 @@ function SignUp() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{t("signup.password")}</FormLabel>
                   <FormControl>
                     <PasswordInput
                       data-testid="password-input"
-                      placeholder="Password"
+                      placeholder={t("signup.password")}
                       {...field}
                     />
                   </FormControl>
@@ -152,11 +155,11 @@ function SignUp() {
               name="confirm_password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
+                  <FormLabel>{t("signup.confirmPassword")}</FormLabel>
                   <FormControl>
                     <PasswordInput
                       data-testid="confirm-password-input"
-                      placeholder="Confirm Password"
+                      placeholder={t("signup.confirmPassword")}
                       {...field}
                     />
                   </FormControl>
@@ -170,14 +173,14 @@ function SignUp() {
               className="w-full"
               loading={signUpMutation.isPending}
             >
-              Sign Up
+              {t("signup.signup")}
             </LoadingButton>
           </div>
 
           <div className="text-center text-sm">
-            Already have an account?{" "}
+            {t("signup.haveAccount")}{" "}
             <RouterLink to="/login" className="underline underline-offset-4">
-              Log in
+              {t("signup.login")}
             </RouterLink>
           </div>
         </form>
