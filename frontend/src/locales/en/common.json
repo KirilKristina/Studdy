@@ -1,0 +1,13 @@
+{
+  "login": {
+    "title": "Login to your account",
+    "email": "Email",
+    "password": "Password",
+    "login": "Log in",
+    "noAccount": "Don't have an account?",
+    "signup": "Sign Up",
+    "forgotPassword": "Forgot password?"
+    
+  }
+  
+}
