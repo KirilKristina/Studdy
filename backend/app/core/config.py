@@ -1,6 +1,7 @@
 import secrets
 import warnings
 from typing import Annotated, Any, Literal
+from urllib.parse import quote
 
 from pydantic import (
     AnyUrl,
@@ -58,15 +59,19 @@ class Settings(BaseSettings):
 
     @computed_field  # type: ignore[prop-decorator]
     @property
-    def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:
-        return PostgresDsn.build(
-            scheme="postgresql+psycopg",
-            username=self.POSTGRES_USER,
-            password=self.POSTGRES_PASSWORD,
-            host=self.POSTGRES_SERVER,
-            port=self.POSTGRES_PORT,
-            path=self.POSTGRES_DB,
-        )
+    def DATABASE_URL(self) -> str:
+        # Build connection string for PostgreSQL with psycopg3
+        encoded_password = quote(self.POSTGRES_PASSWORD, safe="")
+        db_url = f"postgresql+psycopg://{self.POSTGRES_USER}:{encoded_password}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+        # For local dev, don't require SSL; add it if needed for production
+        if self.ENVIRONMENT != "local":
+            db_url += "?sslmode=require"
+        return db_url
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def SQLALCHEMY_DATABASE_URI(self) -> str:
+        return self.DATABASE_URL
 
     SMTP_TLS: bool = True
     SMTP_SSL: bool = False

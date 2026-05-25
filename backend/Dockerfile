@@ -14,31 +14,27 @@ ENV UV_COMPILE_BYTECODE=1
 # Ref: https://docs.astral.sh/uv/guides/integration/docker/#caching
 ENV UV_LINK_MODE=copy
 
+# Increase HTTP timeout for slow network environments
+ENV UV_HTTP_TIMEOUT=120
+
 WORKDIR /app/
 
 # Place executables in the environment at the front of the path
 # Ref: https://docs.astral.sh/uv/guides/integration/docker/#using-the-environment
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Install dependencies
+# Install all dependencies in one step
+# First copy all files (source before sync)
 # Ref: https://docs.astral.sh/uv/guides/integration/docker/#intermediate-layers
-RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --frozen --no-install-workspace --package app
-
-COPY ./backend/scripts /app/backend/scripts
-
 COPY ./backend/pyproject.toml ./backend/alembic.ini /app/backend/
-
+COPY ./backend/scripts /app/backend/scripts
 COPY ./backend/app /app/backend/app
 
-# Sync the project
-# Ref: https://docs.astral.sh/uv/guides/integration/docker/#intermediate-layers
 RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=uv.lock,target=uv.lock \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --frozen --package app
+    --mount=type=bind,source=backend/pyproject.toml,target=backend/pyproject.toml \
+    uv sync --frozen
 
 WORKDIR /app/backend/
 

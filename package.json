@@ -11,6 +11,7 @@
     "test:ui": "bun run --filter frontend test:ui"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.106.2",
     "i18next": "^26.2.0",
     "react-i18next": "^17.0.8"
   }
