@@ -40,7 +40,40 @@ export const Route = createFileRoute(
 )({
   component: CoursesPage,
 })
+const practices = [
+  {
+    id: 1,
+    title: "Практична робота №4",
+    description:
+      "Створення інтерактивного прототипу",
+    deadline: "Дедлайн: завтра, 18:00",
+  },
+]
 
+const labs = [
+  {
+    id: 1,
+    title: "Лабораторна №1",
+    status: "Зараховано",
+    completed: true,
+  },
+
+  {
+    id: 2,
+    title: "Лабораторна №2",
+    status: "В процесі",
+    completed: false,
+  },
+]
+
+const courseProject = {
+  title: "Курсовий проект",
+
+  description:
+    "Розробка дизайну мобільного додатку для управління освітнім процесом.",
+
+  progress: 35,
+}
 const courses = [
   {
     id: 1,
@@ -189,43 +222,148 @@ function CoursesPage() {
 
         <section className="col-span-8 space-y-6">
 
-          <div className="rounded-2xl border bg-card p-6 shadow-sm">
+          <div className="grid grid-cols-2 gap-6">
 
-            <div className="mb-6 flex items-center justify-between">
+            <div className="rounded-2xl border bg-card p-6 shadow-sm">
 
-              <h2 className="text-2xl font-semibold">
-                Лекції
-              </h2>
+              <div className="mb-6 flex items-center justify-between">
 
-              <span className="text-sm text-muted-foreground">
-                12 матеріалів
-              </span>
+                <h2 className="text-2xl font-semibold">
+                  Лекції
+                </h2>
+
+                <span className="text-sm text-muted-foreground">
+                  {lectures.length} матеріалів
+                </span>
+              </div>
+
+              <div className="space-y-4">
+
+                {lectures.map((lecture) => (
+                  <div
+                    key={lecture.id}
+                    className="flex items-center justify-between rounded-xl border p-4 transition hover:bg-muted"
+                  >
+
+                    <div>
+
+                      <p className="font-medium">
+                        {lecture.title}
+                      </p>
+
+                      <p className="text-sm text-muted-foreground">
+                        {lecture.size}
+                      </p>
+                    </div>
+
+                    <button className="text-primary">
+                      ⬇
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="rounded-2xl border border-indigo-200 bg-card p-6 shadow-sm">
 
-              {lectures.map((lecture) => (
-                <div
-                  key={lecture.id}
-                  className="flex items-center justify-between rounded-xl border p-4 transition hover:bg-muted"
-                >
+              <div className="mb-6 flex items-center justify-between">
 
-                  <div>
+                <h2 className="text-2xl font-semibold">
+                  Практичні
+                </h2>
+
+                <span className="text-sm text-muted-foreground">
+                  {practices.length} занять
+                </span>
+              </div>
+
+              <div className="space-y-4">
+
+                {practices.map((practice) => (
+                  <div
+                    key={practice.id}
+                    className="rounded-xl border bg-violet-50 p-4"
+                  >
+
+                    <p className="font-semibold">
+                      {practice.title}
+                    </p>
+
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      {practice.description}
+                    </p>
+
+                    <p className="mt-3 text-sm italic text-violet-700">
+                      {practice.deadline}
+                    </p>
+
+                    <button className="mt-4 w-full rounded-xl bg-indigo-600 py-2 font-semibold text-white">
+
+                      Здати роботу
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+
+            <div className="rounded-2xl border border-emerald-200 bg-card p-6 shadow-sm">
+
+              <h2 className="mb-6 text-2xl font-semibold">
+                Лабораторні
+              </h2>
+
+              <div className="space-y-4">
+
+                {labs.map((lab) => (
+                  <div
+                    key={lab.id}
+                    className={`rounded-xl p-4 ${
+                      lab.completed
+                        ? "bg-emerald-50"
+                        : "bg-muted opacity-70"
+                    }`}
+                  >
 
                     <p className="font-medium">
-                      {lecture.title}
+                      {lab.completed ? "✅" : "⏳"}{" "}
+                      {lab.title}
                     </p>
 
                     <p className="text-sm text-muted-foreground">
-                      {lecture.size}
+                      {lab.status}
                     </p>
                   </div>
+                ))}
+              </div>
+            </div>
 
-                  <button className="text-primary hover:underline">
-                    Download
-                  </button>
-                </div>
-              ))}
+            <div className="rounded-2xl border border-amber-200 bg-card p-6 shadow-sm">
+
+              <h2 className="mb-6 text-2xl font-semibold">
+                {courseProject.title}
+              </h2>
+
+              <p className="text-sm text-muted-foreground">
+                {courseProject.description}
+              </p>
+
+              <div className="mt-6 h-3 overflow-hidden rounded-full bg-muted">
+
+                <div
+                  className="h-full rounded-full bg-amber-500"
+                  style={{
+                    width: `${courseProject.progress}%`,
+                  }}
+                />
+              </div>
+
+              <p className="mt-3 text-sm text-muted-foreground">
+                Прогрес: {courseProject.progress}%
+                завершено
+              </p>
             </div>
           </div>
 
