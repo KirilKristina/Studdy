@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime, timezone
 
 from pydantic import EmailStr
-from sqlalchemy import DateTime
+from sqlalchemy import DateTime, func
 from sqlmodel import Field, Relationship, SQLModel
 
 
@@ -127,3 +127,93 @@ class TokenPayload(SQLModel):
 class NewPassword(SQLModel):
     token: str
     new_password: str = Field(min_length=8, max_length=128)
+
+class CourseBase(SQLModel):
+    name: str = Field(min_length=1, max_length=255)
+    description: str | None = None
+
+
+class Course(CourseBase, table=True):
+    id: uuid.UUID = Field(
+        default_factory=uuid.uuid4,
+        primary_key=True,
+        sa_column_kwargs={"server_default": func.gen_random_uuid()}
+    )
+    task_types: list["TaskType"] = Relationship(back_populates="course")
+
+class TaskTypeBase(SQLModel):
+    name: str = Field(min_length=1, max_length=255)
+    course_id: uuid.UUID = Field(foreign_key="course.id")
+
+
+class TaskType(TaskTypeBase, table=True):
+    id: uuid.UUID = Field(
+        default_factory=uuid.uuid4,
+        primary_key=True,
+        sa_column_kwargs={"server_default": func.gen_random_uuid()}
+    )
+
+    course: "Course" = Relationship(back_populates="task_types")
+    tasks: list["Task"] = Relationship(back_populates="task_type")
+
+class TaskBase(SQLModel):
+    name: str
+    description: str | None = None
+    task_type_id: uuid.UUID = Field(foreign_key="tasktype.id")
+
+
+class Task(TaskBase, table=True):
+    id: uuid.UUID = Field(
+        default_factory=uuid.uuid4,
+        primary_key=True,
+        sa_column_kwargs={"server_default": func.gen_random_uuid()}
+    )
+
+    task_type: "TaskType" = Relationship(back_populates="tasks")
+
+    materials: list["TaskMaterial"] = Relationship(back_populates="task")
+    submissions: list["TaskSubmission"] = Relationship(back_populates="task")
+
+class FileBase(SQLModel):
+    name: str
+    file_path: str
+    size: int
+
+
+class File(FileBase, table=True):
+    id: uuid.UUID = Field(
+        default_factory=uuid.uuid4,
+        primary_key=True,
+        sa_column_kwargs={"server_default": func.gen_random_uuid()}
+    )
+
+    user_id: uuid.UUID = Field(foreign_key="user.id")
+
+class TaskMaterial(SQLModel, table=True):
+    id: uuid.UUID = Field(
+        default_factory=uuid.uuid4,
+        primary_key=True,
+        sa_column_kwargs={"server_default": func.gen_random_uuid()}
+    )
+    task_id: uuid.UUID = Field(foreign_key="task.id")
+    file_id: uuid.UUID = Field(foreign_key="file.id")
+
+    task: "Task" = Relationship(back_populates="materials")
+    file: "File" = Relationship()
+
+class TaskSubmission(SQLModel, table=True):
+    id: uuid.UUID = Field(
+        default_factory=uuid.uuid4,
+        primary_key=True,
+        sa_column_kwargs={"server_default": func.gen_random_uuid()}
+    )
+
+    task_id: uuid.UUID = Field(foreign_key="task.id")
+    file_id: uuid.UUID = Field(foreign_key="file.id")
+    user_id: uuid.UUID = Field(foreign_key="user.id")
+
+    grade: int | None = None
+    comment: str | None = None
+
+    task: "Task" = Relationship(back_populates="submissions")
+    file: "File" = Relationship()

@@ -17,5 +17,18 @@ function Terms() {
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error loading terms</div>
 
-  return <div>{data?.text}</div>
+  return <div>(
+    <title>My Courses</title>
+    <h1>This term courses:</h1>
+    <div className="courses-list">
+      {data?.courses.map((course: any) => (
+        <div key={course.id} className="course-item">
+          <h2>{course.name}</h2>
+          <p>{course.description}</p>
+        </div>
+      ))}
+    </div>
+    <h2>Success data getting:</h2>
+    {data?.text} ) 
+  </div>
 }
