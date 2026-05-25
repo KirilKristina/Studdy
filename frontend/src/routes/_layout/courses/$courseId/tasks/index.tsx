@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { Link } from "@tanstack/react-router"
 
 const tasks = [
   {
@@ -28,11 +29,12 @@ const tasks = [
   },
 ]
 
-export const Route = createFileRoute("/_layout/tasks")({
+export const Route = createFileRoute("/_layout/courses/$courseId/tasks/")({
   component: TaskPage,
 })
 
 function TaskPage() {
+  const { courseId } = Route.useParams()
   return (
     <main className="grid grid-cols-12 gap-6">
       <section className="col-span-8 space-y-6">
@@ -54,8 +56,13 @@ function TaskPage() {
 
         <div className="space-y-4">
           {tasks.map((task) => (
-            <div
+            <Link
               key={task.id}
+              to="/courses/$courseId/tasks/$taskId"
+              params={{
+                courseId: String(courseId),
+                taskId: String(task.id),
+              }}
               className={`rounded-xl border bg-card p-6 shadow-sm transition hover:shadow-md ${
                 task.status === "active"
                   ? "border-primary"
@@ -135,7 +142,7 @@ function TaskPage() {
                   </button>
                 )}
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

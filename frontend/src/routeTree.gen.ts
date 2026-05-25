@@ -15,13 +15,18 @@ import { Route as RecoverPasswordRouteImport } from './routes/recover-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
-import { Route as LayoutTermsRouteImport } from './routes/_layout/terms'
-import { Route as LayoutTermRouteImport } from './routes/_layout/term'
-import { Route as LayoutTasksRouteImport } from './routes/_layout/tasks'
 import { Route as LayoutTaskRouteImport } from './routes/_layout/task'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 import { Route as LayoutItemsRouteImport } from './routes/_layout/items'
 import { Route as LayoutAdminRouteImport } from './routes/_layout/admin'
+import { Route as LayoutCoursesRouteRouteImport } from './routes/_layout/courses/route'
+import { Route as LayoutCoursesIndexRouteImport } from './routes/_layout/courses/index'
+import { Route as LayoutCoursesCourseIdRouteRouteImport } from './routes/_layout/courses/$courseId/route'
+import { Route as LayoutCoursesCourseIdIndexRouteImport } from './routes/_layout/courses/$courseId/index'
+import { Route as LayoutCoursesCourseIdTasksRouteRouteImport } from './routes/_layout/courses/$courseId/tasks/route'
+import { Route as LayoutCoursesCourseIdTasksIndexRouteImport } from './routes/_layout/courses/$courseId/tasks/index'
+import { Route as LayoutCoursesCourseIdTasksTaskIdRouteRouteImport } from './routes/_layout/courses/$courseId/tasks/$taskId/route'
+import { Route as LayoutCoursesCourseIdTasksTaskIdIndexRouteImport } from './routes/_layout/courses/$courseId/tasks/$taskId/index'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -52,21 +57,6 @@ const LayoutIndexRoute = LayoutIndexRouteImport.update({
   path: '/',
   getParentRoute: () => LayoutRoute,
 } as any)
-const LayoutTermsRoute = LayoutTermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
-  getParentRoute: () => LayoutRoute,
-} as any)
-const LayoutTermRoute = LayoutTermRouteImport.update({
-  id: '/term',
-  path: '/term',
-  getParentRoute: () => LayoutRoute,
-} as any)
-const LayoutTasksRoute = LayoutTasksRouteImport.update({
-  id: '/tasks',
-  path: '/tasks',
-  getParentRoute: () => LayoutRoute,
-} as any)
 const LayoutTaskRoute = LayoutTaskRouteImport.update({
   id: '/task',
   path: '/task',
@@ -87,6 +77,52 @@ const LayoutAdminRoute = LayoutAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutCoursesRouteRoute = LayoutCoursesRouteRouteImport.update({
+  id: '/courses',
+  path: '/courses',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutCoursesIndexRoute = LayoutCoursesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LayoutCoursesRouteRoute,
+} as any)
+const LayoutCoursesCourseIdRouteRoute =
+  LayoutCoursesCourseIdRouteRouteImport.update({
+    id: '/$courseId',
+    path: '/$courseId',
+    getParentRoute: () => LayoutCoursesRouteRoute,
+  } as any)
+const LayoutCoursesCourseIdIndexRoute =
+  LayoutCoursesCourseIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => LayoutCoursesCourseIdRouteRoute,
+  } as any)
+const LayoutCoursesCourseIdTasksRouteRoute =
+  LayoutCoursesCourseIdTasksRouteRouteImport.update({
+    id: '/tasks',
+    path: '/tasks',
+    getParentRoute: () => LayoutCoursesCourseIdRouteRoute,
+  } as any)
+const LayoutCoursesCourseIdTasksIndexRoute =
+  LayoutCoursesCourseIdTasksIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => LayoutCoursesCourseIdTasksRouteRoute,
+  } as any)
+const LayoutCoursesCourseIdTasksTaskIdRouteRoute =
+  LayoutCoursesCourseIdTasksTaskIdRouteRouteImport.update({
+    id: '/$taskId',
+    path: '/$taskId',
+    getParentRoute: () => LayoutCoursesCourseIdTasksRouteRoute,
+  } as any)
+const LayoutCoursesCourseIdTasksTaskIdIndexRoute =
+  LayoutCoursesCourseIdTasksTaskIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => LayoutCoursesCourseIdTasksTaskIdRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
@@ -94,13 +130,18 @@ export interface FileRoutesByFullPath {
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/courses': typeof LayoutCoursesRouteRouteWithChildren
   '/admin': typeof LayoutAdminRoute
   '/items': typeof LayoutItemsRoute
   '/settings': typeof LayoutSettingsRoute
   '/task': typeof LayoutTaskRoute
-  '/tasks': typeof LayoutTasksRoute
-  '/term': typeof LayoutTermRoute
-  '/terms': typeof LayoutTermsRoute
+  '/courses/$courseId': typeof LayoutCoursesCourseIdRouteRouteWithChildren
+  '/courses/': typeof LayoutCoursesIndexRoute
+  '/courses/$courseId/tasks': typeof LayoutCoursesCourseIdTasksRouteRouteWithChildren
+  '/courses/$courseId/': typeof LayoutCoursesCourseIdIndexRoute
+  '/courses/$courseId/tasks/$taskId': typeof LayoutCoursesCourseIdTasksTaskIdRouteRouteWithChildren
+  '/courses/$courseId/tasks/': typeof LayoutCoursesCourseIdTasksIndexRoute
+  '/courses/$courseId/tasks/$taskId/': typeof LayoutCoursesCourseIdTasksTaskIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -111,10 +152,11 @@ export interface FileRoutesByTo {
   '/items': typeof LayoutItemsRoute
   '/settings': typeof LayoutSettingsRoute
   '/task': typeof LayoutTaskRoute
-  '/tasks': typeof LayoutTasksRoute
-  '/term': typeof LayoutTermRoute
-  '/terms': typeof LayoutTermsRoute
   '/': typeof LayoutIndexRoute
+  '/courses': typeof LayoutCoursesIndexRoute
+  '/courses/$courseId': typeof LayoutCoursesCourseIdIndexRoute
+  '/courses/$courseId/tasks': typeof LayoutCoursesCourseIdTasksIndexRoute
+  '/courses/$courseId/tasks/$taskId': typeof LayoutCoursesCourseIdTasksTaskIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -123,14 +165,19 @@ export interface FileRoutesById {
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/_layout/courses': typeof LayoutCoursesRouteRouteWithChildren
   '/_layout/admin': typeof LayoutAdminRoute
   '/_layout/items': typeof LayoutItemsRoute
   '/_layout/settings': typeof LayoutSettingsRoute
   '/_layout/task': typeof LayoutTaskRoute
-  '/_layout/tasks': typeof LayoutTasksRoute
-  '/_layout/term': typeof LayoutTermRoute
-  '/_layout/terms': typeof LayoutTermsRoute
   '/_layout/': typeof LayoutIndexRoute
+  '/_layout/courses/$courseId': typeof LayoutCoursesCourseIdRouteRouteWithChildren
+  '/_layout/courses/': typeof LayoutCoursesIndexRoute
+  '/_layout/courses/$courseId/tasks': typeof LayoutCoursesCourseIdTasksRouteRouteWithChildren
+  '/_layout/courses/$courseId/': typeof LayoutCoursesCourseIdIndexRoute
+  '/_layout/courses/$courseId/tasks/$taskId': typeof LayoutCoursesCourseIdTasksTaskIdRouteRouteWithChildren
+  '/_layout/courses/$courseId/tasks/': typeof LayoutCoursesCourseIdTasksIndexRoute
+  '/_layout/courses/$courseId/tasks/$taskId/': typeof LayoutCoursesCourseIdTasksTaskIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -140,13 +187,18 @@ export interface FileRouteTypes {
     | '/recover-password'
     | '/reset-password'
     | '/signup'
+    | '/courses'
     | '/admin'
     | '/items'
     | '/settings'
     | '/task'
-    | '/tasks'
-    | '/term'
-    | '/terms'
+    | '/courses/$courseId'
+    | '/courses/'
+    | '/courses/$courseId/tasks'
+    | '/courses/$courseId/'
+    | '/courses/$courseId/tasks/$taskId'
+    | '/courses/$courseId/tasks/'
+    | '/courses/$courseId/tasks/$taskId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -157,10 +209,11 @@ export interface FileRouteTypes {
     | '/items'
     | '/settings'
     | '/task'
-    | '/tasks'
-    | '/term'
-    | '/terms'
     | '/'
+    | '/courses'
+    | '/courses/$courseId'
+    | '/courses/$courseId/tasks'
+    | '/courses/$courseId/tasks/$taskId'
   id:
     | '__root__'
     | '/_layout'
@@ -168,14 +221,19 @@ export interface FileRouteTypes {
     | '/recover-password'
     | '/reset-password'
     | '/signup'
+    | '/_layout/courses'
     | '/_layout/admin'
     | '/_layout/items'
     | '/_layout/settings'
     | '/_layout/task'
-    | '/_layout/tasks'
-    | '/_layout/term'
-    | '/_layout/terms'
     | '/_layout/'
+    | '/_layout/courses/$courseId'
+    | '/_layout/courses/'
+    | '/_layout/courses/$courseId/tasks'
+    | '/_layout/courses/$courseId/'
+    | '/_layout/courses/$courseId/tasks/$taskId'
+    | '/_layout/courses/$courseId/tasks/'
+    | '/_layout/courses/$courseId/tasks/$taskId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -230,27 +288,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutIndexRouteImport
       parentRoute: typeof LayoutRoute
     }
-    '/_layout/terms': {
-      id: '/_layout/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof LayoutTermsRouteImport
-      parentRoute: typeof LayoutRoute
-    }
-    '/_layout/term': {
-      id: '/_layout/term'
-      path: '/term'
-      fullPath: '/term'
-      preLoaderRoute: typeof LayoutTermRouteImport
-      parentRoute: typeof LayoutRoute
-    }
-    '/_layout/tasks': {
-      id: '/_layout/tasks'
-      path: '/tasks'
-      fullPath: '/tasks'
-      preLoaderRoute: typeof LayoutTasksRouteImport
-      parentRoute: typeof LayoutRoute
-    }
     '/_layout/task': {
       id: '/_layout/task'
       path: '/task'
@@ -279,28 +316,142 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAdminRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/courses': {
+      id: '/_layout/courses'
+      path: '/courses'
+      fullPath: '/courses'
+      preLoaderRoute: typeof LayoutCoursesRouteRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/courses/': {
+      id: '/_layout/courses/'
+      path: '/'
+      fullPath: '/courses/'
+      preLoaderRoute: typeof LayoutCoursesIndexRouteImport
+      parentRoute: typeof LayoutCoursesRouteRoute
+    }
+    '/_layout/courses/$courseId': {
+      id: '/_layout/courses/$courseId'
+      path: '/$courseId'
+      fullPath: '/courses/$courseId'
+      preLoaderRoute: typeof LayoutCoursesCourseIdRouteRouteImport
+      parentRoute: typeof LayoutCoursesRouteRoute
+    }
+    '/_layout/courses/$courseId/': {
+      id: '/_layout/courses/$courseId/'
+      path: '/'
+      fullPath: '/courses/$courseId/'
+      preLoaderRoute: typeof LayoutCoursesCourseIdIndexRouteImport
+      parentRoute: typeof LayoutCoursesCourseIdRouteRoute
+    }
+    '/_layout/courses/$courseId/tasks': {
+      id: '/_layout/courses/$courseId/tasks'
+      path: '/tasks'
+      fullPath: '/courses/$courseId/tasks'
+      preLoaderRoute: typeof LayoutCoursesCourseIdTasksRouteRouteImport
+      parentRoute: typeof LayoutCoursesCourseIdRouteRoute
+    }
+    '/_layout/courses/$courseId/tasks/': {
+      id: '/_layout/courses/$courseId/tasks/'
+      path: '/'
+      fullPath: '/courses/$courseId/tasks/'
+      preLoaderRoute: typeof LayoutCoursesCourseIdTasksIndexRouteImport
+      parentRoute: typeof LayoutCoursesCourseIdTasksRouteRoute
+    }
+    '/_layout/courses/$courseId/tasks/$taskId': {
+      id: '/_layout/courses/$courseId/tasks/$taskId'
+      path: '/$taskId'
+      fullPath: '/courses/$courseId/tasks/$taskId'
+      preLoaderRoute: typeof LayoutCoursesCourseIdTasksTaskIdRouteRouteImport
+      parentRoute: typeof LayoutCoursesCourseIdTasksRouteRoute
+    }
+    '/_layout/courses/$courseId/tasks/$taskId/': {
+      id: '/_layout/courses/$courseId/tasks/$taskId/'
+      path: '/'
+      fullPath: '/courses/$courseId/tasks/$taskId/'
+      preLoaderRoute: typeof LayoutCoursesCourseIdTasksTaskIdIndexRouteImport
+      parentRoute: typeof LayoutCoursesCourseIdTasksTaskIdRouteRoute
+    }
   }
 }
 
+interface LayoutCoursesCourseIdTasksTaskIdRouteRouteChildren {
+  LayoutCoursesCourseIdTasksTaskIdIndexRoute: typeof LayoutCoursesCourseIdTasksTaskIdIndexRoute
+}
+
+const LayoutCoursesCourseIdTasksTaskIdRouteRouteChildren: LayoutCoursesCourseIdTasksTaskIdRouteRouteChildren =
+  {
+    LayoutCoursesCourseIdTasksTaskIdIndexRoute:
+      LayoutCoursesCourseIdTasksTaskIdIndexRoute,
+  }
+
+const LayoutCoursesCourseIdTasksTaskIdRouteRouteWithChildren =
+  LayoutCoursesCourseIdTasksTaskIdRouteRoute._addFileChildren(
+    LayoutCoursesCourseIdTasksTaskIdRouteRouteChildren,
+  )
+
+interface LayoutCoursesCourseIdTasksRouteRouteChildren {
+  LayoutCoursesCourseIdTasksTaskIdRouteRoute: typeof LayoutCoursesCourseIdTasksTaskIdRouteRouteWithChildren
+  LayoutCoursesCourseIdTasksIndexRoute: typeof LayoutCoursesCourseIdTasksIndexRoute
+}
+
+const LayoutCoursesCourseIdTasksRouteRouteChildren: LayoutCoursesCourseIdTasksRouteRouteChildren =
+  {
+    LayoutCoursesCourseIdTasksTaskIdRouteRoute:
+      LayoutCoursesCourseIdTasksTaskIdRouteRouteWithChildren,
+    LayoutCoursesCourseIdTasksIndexRoute: LayoutCoursesCourseIdTasksIndexRoute,
+  }
+
+const LayoutCoursesCourseIdTasksRouteRouteWithChildren =
+  LayoutCoursesCourseIdTasksRouteRoute._addFileChildren(
+    LayoutCoursesCourseIdTasksRouteRouteChildren,
+  )
+
+interface LayoutCoursesCourseIdRouteRouteChildren {
+  LayoutCoursesCourseIdTasksRouteRoute: typeof LayoutCoursesCourseIdTasksRouteRouteWithChildren
+  LayoutCoursesCourseIdIndexRoute: typeof LayoutCoursesCourseIdIndexRoute
+}
+
+const LayoutCoursesCourseIdRouteRouteChildren: LayoutCoursesCourseIdRouteRouteChildren =
+  {
+    LayoutCoursesCourseIdTasksRouteRoute:
+      LayoutCoursesCourseIdTasksRouteRouteWithChildren,
+    LayoutCoursesCourseIdIndexRoute: LayoutCoursesCourseIdIndexRoute,
+  }
+
+const LayoutCoursesCourseIdRouteRouteWithChildren =
+  LayoutCoursesCourseIdRouteRoute._addFileChildren(
+    LayoutCoursesCourseIdRouteRouteChildren,
+  )
+
+interface LayoutCoursesRouteRouteChildren {
+  LayoutCoursesCourseIdRouteRoute: typeof LayoutCoursesCourseIdRouteRouteWithChildren
+  LayoutCoursesIndexRoute: typeof LayoutCoursesIndexRoute
+}
+
+const LayoutCoursesRouteRouteChildren: LayoutCoursesRouteRouteChildren = {
+  LayoutCoursesCourseIdRouteRoute: LayoutCoursesCourseIdRouteRouteWithChildren,
+  LayoutCoursesIndexRoute: LayoutCoursesIndexRoute,
+}
+
+const LayoutCoursesRouteRouteWithChildren =
+  LayoutCoursesRouteRoute._addFileChildren(LayoutCoursesRouteRouteChildren)
+
 interface LayoutRouteChildren {
+  LayoutCoursesRouteRoute: typeof LayoutCoursesRouteRouteWithChildren
   LayoutAdminRoute: typeof LayoutAdminRoute
   LayoutItemsRoute: typeof LayoutItemsRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutTaskRoute: typeof LayoutTaskRoute
-  LayoutTasksRoute: typeof LayoutTasksRoute
-  LayoutTermRoute: typeof LayoutTermRoute
-  LayoutTermsRoute: typeof LayoutTermsRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutCoursesRouteRoute: LayoutCoursesRouteRouteWithChildren,
   LayoutAdminRoute: LayoutAdminRoute,
   LayoutItemsRoute: LayoutItemsRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutTaskRoute: LayoutTaskRoute,
-  LayoutTasksRoute: LayoutTasksRoute,
-  LayoutTermRoute: LayoutTermRoute,
-  LayoutTermsRoute: LayoutTermsRoute,
   LayoutIndexRoute: LayoutIndexRoute,
 }
 

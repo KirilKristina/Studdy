@@ -7,9 +7,14 @@ import {
   Globe,
   MoreVertical,
 } from "lucide-react"
+import { Link } from "@tanstack/react-router"
 
-export const Route = createFileRoute("/_layout/terms")({
+export const Route = createFileRoute("/_layout/courses/")({
   component: TermsPage,
+
+  staticData: {
+  title: "Courses",
+},
 })
 
 const courses = [
@@ -141,8 +146,12 @@ function TermsPage() {
           const Icon = course.icon
 
           return (
-            <div
+            <Link
               key={course.id}
+              to="/courses/$courseId"
+              params={{
+                courseId: String(course.id),
+              }}
               className="group rounded-3xl border bg-card p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
             >
 
@@ -219,7 +228,7 @@ function TermsPage() {
                   Матеріали
                 </button>
               </div>
-            </div>
+            </Link>
           )
         })}
       </div>
