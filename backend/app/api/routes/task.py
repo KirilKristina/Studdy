@@ -9,11 +9,9 @@ router = APIRouter()
 def read_task(
     task_id: int,
     session=Depends(deps.get_db),
-    current_user=Depends(deps.get_current_active_user),
 ):
     task = session.get(Task, task_id)
-    if not task or task.owner_id != current_user.id:
-        raise HTTPException(status_code=404, detail="Task not found")
+
     return task
 
 @router.patch("/{task_id}/notes")
@@ -52,21 +50,3 @@ async def upload_report(
     return {"filename": file.filename}
 
 
-@router.get("/")
-def get_tasks(
-    task_type_id: str,
-    session=Depends(
-        deps.get_db,
-    ),
-):
-
-    tasks = session.exec(
-
-        select(Task).where(
-            Task.task_type_id
-            == task_type_id
-        )
-
-    ).all()
-
-    return tasks

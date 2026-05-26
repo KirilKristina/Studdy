@@ -184,7 +184,7 @@ function Layout() {
 
             <SidebarTrigger className="text-muted-foreground" />
 
-            <div className="flex items-center gap-2 text-sm">
+            <div className="mx-auto flex max-w-7xl items-center gap-2 text-sm">
 
               {breadcrumbs.map(
                 (
@@ -199,8 +199,7 @@ function Layout() {
 
                     <span
                       className={
-                        index ===
-                        breadcrumbs.length - 1
+                        index === breadcrumbs.length - 1
                           ? "font-semibold text-foreground"
                           : "text-muted-foreground"
                       }
@@ -208,10 +207,10 @@ function Layout() {
                       {item}
                     </span>
 
-                    {index !==
-                      breadcrumbs.length - 1 && (
+                    {index !== breadcrumbs.length - 1 && (
 
                       <span className="text-muted-foreground">
+
                         /
                       </span>
                     )}

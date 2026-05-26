@@ -61,7 +61,7 @@ function TaskPage() {
           const tasksResponse =
             await fetch(
 
-              `http://127.0.0.1:8000/api/v1/tasks?task_type_id=${taskTypeId}`,
+              `http://127.0.0.1:8000/api/v1/courses/tasks?task_type_id=${taskTypeId}`,
             )
 
           if (!tasksResponse.ok) {
@@ -73,6 +73,8 @@ function TaskPage() {
 
           const tasksData =
             await tasksResponse.json()
+
+          console.log(tasksData)
 
           setTasks(tasksData)
 
@@ -92,6 +94,8 @@ function TaskPage() {
           const taskTypeData =
             await taskTypeResponse.json()
 
+          console.log(taskTypeData)
+
           setTaskType(
             taskTypeData,
           )
@@ -99,6 +103,7 @@ function TaskPage() {
         } catch (error) {
 
           console.error(error)
+
         } finally {
 
           setLoading(false)
@@ -178,9 +183,14 @@ function TaskPage() {
 
           {tasks.map((task, index) => (
 
-            <div
+            <Link
               key={task.id}
-              className={`rounded-xl border bg-card p-6 shadow-sm transition hover:shadow-md ${
+              to="/tasks/$taskId"
+              params={{
+                taskId:
+                  String(task.id),
+              }}
+              className={`block rounded-xl border bg-card p-6 shadow-sm transition hover:shadow-md ${
                 index === 0
                   ? "border-primary"
                   : ""
@@ -239,7 +249,7 @@ function TaskPage() {
                   Відкрити
                 </button>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
