@@ -21,6 +21,14 @@ function TaskTypeRenderer({
   taskType,
 }: Props) {
 
+  const search = {
+    courseId:
+      String(taskType.course_id),
+
+    taskTypeId:
+      String(taskType.id),
+  }
+
   switch (taskType.name) {
 
     case "Lecture":
@@ -29,10 +37,7 @@ function TaskTypeRenderer({
 
         <Link
           to="/tasks"
-          search={{
-            taskTypeId:
-              String(taskType.id),
-          }}
+          search={search}
           className="block"
         >
 
@@ -48,10 +53,7 @@ function TaskTypeRenderer({
 
         <Link
           to="/tasks"
-          search={{
-            taskTypeId:
-              String(taskType.id),
-          }}
+          search={search}
           className="block"
         >
 
@@ -67,10 +69,7 @@ function TaskTypeRenderer({
 
         <Link
           to="/tasks"
-          search={{
-            taskTypeId:
-              String(taskType.id),
-          }}
+          search={search}
           className="block"
         >
 
@@ -86,10 +85,7 @@ function TaskTypeRenderer({
 
         <Link
           to="/tasks"
-          search={{
-            taskTypeId:
-              String(taskType.id),
-          }}
+          search={search}
           className="block"
         >
 

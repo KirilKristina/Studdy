@@ -10,6 +10,7 @@ from sqlmodel import (
 )
 
 from app.api import deps
+
 from app.models import (
     Course,
     TaskType,
@@ -35,6 +36,7 @@ def get_courses():
 
         return courses
 
+
 @router.get("/tasks")
 def get_tasks(
     task_type_id: str,
@@ -53,6 +55,30 @@ def get_tasks(
     ).all()
 
     return tasks
+
+
+@router.get("/tasks/{task_id}")
+def get_task(
+    task_id: str,
+    session=Depends(
+        deps.get_db,
+    ),
+):
+
+    task = session.get(
+        Task,
+        task_id,
+    )
+
+    if not task:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Task not found",
+        )
+
+    return task
+
 
 @router.get("/task-types/{task_type_id}")
 def get_task_type(
@@ -115,7 +141,3 @@ def get_course(
             )
 
         return course
-
-
-
-

@@ -19,6 +19,11 @@ export const Route =
 
       return {
 
+        courseId:
+          typeof search.courseId === "string"
+            ? search.courseId
+            : "",
+
         taskTypeId:
           typeof search.taskTypeId === "string"
             ? search.taskTypeId
@@ -32,6 +37,7 @@ export const Route =
 function TaskPage() {
 
   const {
+    courseId,
     taskTypeId,
   } = Route.useSearch()
 
@@ -60,7 +66,6 @@ function TaskPage() {
 
           const tasksResponse =
             await fetch(
-
               `http://127.0.0.1:8000/api/v1/courses/tasks?task_type_id=${taskTypeId}`,
             )
 
@@ -74,13 +79,10 @@ function TaskPage() {
           const tasksData =
             await tasksResponse.json()
 
-          console.log(tasksData)
-
           setTasks(tasksData)
 
           const taskTypeResponse =
             await fetch(
-
               `http://127.0.0.1:8000/api/v1/courses/task-types/${taskTypeId}`,
             )
 
@@ -93,8 +95,6 @@ function TaskPage() {
 
           const taskTypeData =
             await taskTypeResponse.json()
-
-          console.log(taskTypeData)
 
           setTaskType(
             taskTypeData,
@@ -146,22 +146,6 @@ function TaskPage() {
 
           <div>
 
-            <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
-
-              <Link
-                to="/courses"
-                className="hover:text-primary"
-              >
-                Courses
-              </Link>
-
-              <span>/</span>
-
-              <span>
-                {taskType?.name || "Tasks"}
-              </span>
-            </div>
-
             <h1 className="text-4xl font-bold">
 
               {taskType?.name || "Tasks"}
@@ -186,10 +170,17 @@ function TaskPage() {
             <Link
               key={task.id}
               to="/tasks/$taskId"
+
               params={{
                 taskId:
                   String(task.id),
               }}
+
+              search={{
+                courseId,
+                taskTypeId,
+              }}
+
               className={`block rounded-xl border bg-card p-6 shadow-sm transition hover:shadow-md ${
                 index === 0
                   ? "border-primary"
@@ -241,6 +232,7 @@ function TaskPage() {
               <div className="flex items-center justify-between border-t pt-4 text-sm text-muted-foreground">
 
                 <span>
+
                   ID: {task.id}
                 </span>
 

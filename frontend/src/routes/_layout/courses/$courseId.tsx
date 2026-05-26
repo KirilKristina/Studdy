@@ -157,23 +157,6 @@ function CoursesPage() {
 
     <main className="space-y-8">
 
-      <div className="flex items-center gap-2 text-sm">
-
-        <Link
-          to="/courses"
-          className="text-muted-foreground hover:text-foreground"
-        >
-          Courses
-        </Link>
-
-        <span className="text-muted-foreground">
-          /
-        </span>
-
-        <span className="font-medium text-foreground">
-          {course.name}
-        </span>
-      </div>
 
       <section className="relative overflow-hidden rounded-3xl">
 
