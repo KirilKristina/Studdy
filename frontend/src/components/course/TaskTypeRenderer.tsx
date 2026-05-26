@@ -1,8 +1,17 @@
-import LectureCard from "./LectureCard"
-import PracticeCard from "./PracticeCard"
-import LabCard from "./LabCard"
-import ProjectCard from "./ProjectCard"
+import { Link }
+  from "@tanstack/react-router"
 
+import LectureCard
+  from "./LectureCard"
+
+import PracticeCard
+  from "./PracticeCard"
+
+import LabCard
+  from "./LabCard"
+
+import ProjectCard
+  from "./ProjectCard"
 
 type Props = {
   taskType: any
@@ -17,39 +26,82 @@ function TaskTypeRenderer({
     case "Lecture":
 
       return (
-        <LectureCard
-          taskType={taskType}
-        />
+
+        <Link
+          to="/tasks"
+          search={{
+            taskTypeId:
+              String(taskType.id),
+          }}
+          className="block"
+        >
+
+          <LectureCard
+            taskType={taskType}
+          />
+        </Link>
       )
 
     case "Homework":
 
       return (
-        <PracticeCard
-          taskType={taskType}
-        />
+
+        <Link
+          to="/tasks"
+          search={{
+            taskTypeId:
+              String(taskType.id),
+          }}
+          className="block"
+        >
+
+          <PracticeCard
+            taskType={taskType}
+          />
+        </Link>
       )
 
     case "Lab Work":
 
       return (
-        <LabCard
-          taskType={taskType}
-        />
+
+        <Link
+          to="/tasks"
+          search={{
+            taskTypeId:
+              String(taskType.id),
+          }}
+          className="block"
+        >
+
+          <LabCard
+            taskType={taskType}
+          />
+        </Link>
       )
 
     case "Project":
 
       return (
-        <ProjectCard
-          taskType={taskType}
-        />
+
+        <Link
+          to="/tasks"
+          search={{
+            taskTypeId:
+              String(taskType.id),
+          }}
+          className="block"
+        >
+
+          <ProjectCard
+            taskType={taskType}
+          />
+        </Link>
       )
 
     default:
 
       return null
-    
   }
 }
 

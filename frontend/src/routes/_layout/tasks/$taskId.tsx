@@ -2,13 +2,13 @@ import { createFileRoute } from '@tanstack/react-router'
 import { askAI } from "@/lib/ai"
 import { useState } from "react"
 
-export const Route = createFileRoute('/_layout/courses/$courseId/tasks/$taskId/')({
+export const Route = createFileRoute('/_layout/tasks/$taskId')({
   component: TaskPage,
 })
 
 function TaskPage() {
   const [message, setMessage] = useState("")
-  const [response, setResponse] = useState("")
+  const [response, setResponse] = useState<any>(null)
   const [loading, setLoading] = useState(false)
 
   async function handleAskAI(text?: string) {
@@ -20,7 +20,8 @@ function TaskPage() {
 
   try {
     const data = await askAI(query)
-    setResponse(data.response)
+    // 🔥 тепер зберігаємо весь об'єкт (text/file)
+    setResponse(data)
   } catch (e) {
     console.error(e)
   } finally {
@@ -234,11 +235,37 @@ function TaskPage() {
             </button>
           </div>
 
-          {/* response */}
+          {/* response (FIXED) */}
           <div className="mt-6 rounded-lg bg-white/10 p-4 text-sm whitespace-pre-wrap">
-            {loading ? "AI думає..." : response}
+            {loading && "AI думає..."}
+
+            {response?.type === "text" && (
+              <div>{response.content}</div>
+            )}
+
+            {response?.type === "file" && (
+              <div>
+                <p>📄 DOCX готовий</p>
+
+                <a 
+                  href={`http://localhost:8000${response.download_url}`} 
+                  target="_blank"
+                  rel="noreferrer" // Рекомендується додавати для безпеки
+                >
+                  Download file
+                </a>
+              </div>
+            )}
+
+            {response?.type === "image" && (
+              <img
+                src={response.url}
+                className="rounded-lg"
+              />
+            )}
           </div>
         </section>
+        
       </aside>
     </main>
   )

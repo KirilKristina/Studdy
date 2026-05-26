@@ -1,5 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router"
-import { useEffect, useState } from "react"
+import {
+  createFileRoute,
+  Link,
+} from "@tanstack/react-router"
+
+import {
+  useEffect,
+  useState,
+} from "react"
 
 import TaskTypeRenderer
   from "@/components/course/TaskTypeRenderer"
@@ -53,11 +60,12 @@ function getTimeRemaining(
   }
 }
 
-export const Route = createFileRoute(
-  "/_layout/courses/$courseId/",
-)({
-  component: CoursesPage,
-})
+export const Route =
+  createFileRoute(
+    "/_layout/courses/$courseId",
+  )({
+    component: CoursesPage,
+  })
 
 function CoursesPage() {
 
@@ -148,6 +156,24 @@ function CoursesPage() {
   return (
 
     <main className="space-y-8">
+
+      <div className="flex items-center gap-2 text-sm">
+
+        <Link
+          to="/courses"
+          className="text-muted-foreground hover:text-foreground"
+        >
+          Courses
+        </Link>
+
+        <span className="text-muted-foreground">
+          /
+        </span>
+
+        <span className="font-medium text-foreground">
+          {course.name}
+        </span>
+      </div>
 
       <section className="relative overflow-hidden rounded-3xl">
 

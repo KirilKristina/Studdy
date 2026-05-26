@@ -59,3 +59,25 @@ def get_course(
             )
 
         return course
+    
+    
+@router.get("/task-types/{task_type_id}")
+def get_task_type(
+    task_type_id: str,
+):
+
+    with Session(engine) as session:
+
+        task_type = session.get(
+            TaskType,
+            task_type_id,
+        )
+
+        if not task_type:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Task type not found",
+            )
+
+        return task_type

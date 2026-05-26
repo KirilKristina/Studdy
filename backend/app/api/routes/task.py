@@ -50,3 +50,23 @@ async def upload_report(
     session.commit()
     
     return {"filename": file.filename}
+
+
+@router.get("/")
+def get_tasks(
+    task_type_id: str,
+    session=Depends(
+        deps.get_db,
+    ),
+):
+
+    tasks = session.exec(
+
+        select(Task).where(
+            Task.task_type_id
+            == task_type_id
+        )
+
+    ).all()
+
+    return tasks

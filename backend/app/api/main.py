@@ -10,7 +10,7 @@ from app.api.routes import (
     terms,
 )
 from app.core.config import settings
-from backend.app.api.routes import ai
+from app.api.routes import ai
 
 api_router = APIRouter()
 api_router.include_router(login.router)
