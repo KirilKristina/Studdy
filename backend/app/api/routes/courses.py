@@ -1,7 +1,7 @@
 from fastapi import APIRouter
-from sqlmodel import Session
+from sqlmodel import Session, select
 
-from app.models import Course
+from app.models import Course,TaskType
 from app.core.db import engine
 import uuid
 
@@ -22,3 +22,40 @@ def get_courses():
         courses = session.query(Course).all()
 
         return courses
+    
+    
+@router.get("/{course_id}/task-types")
+def get_task_types(
+    course_id: str,
+):
+
+    with Session(engine) as session:
+
+        task_types = session.exec(
+            select(TaskType).where(
+                TaskType.course_id == course_id
+            )
+        ).all()
+
+        return task_types
+    
+@router.get("/{course_id}")
+def get_course(
+    course_id: str,
+):
+
+    with Session(engine) as session:
+
+        course = session.get(
+            Course,
+            course_id,
+        )
+
+        if not course:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Course not found",
+            )
+
+        return course
