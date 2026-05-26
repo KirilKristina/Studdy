@@ -57,8 +57,8 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str = ""
     POSTGRES_DB: str = ""
 
-    OPENAI_API_KEY: str | None = None
-    
+    OPENROUTER_API_KEY: str | None = None
+
     @computed_field  # type: ignore[prop-decorator]
     @property
     def DATABASE_URL(self) -> str:
