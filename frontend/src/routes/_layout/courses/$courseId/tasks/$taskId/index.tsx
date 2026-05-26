@@ -1,10 +1,33 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { askAI } from "@/lib/ai"
+import { useState } from "react"
 
 export const Route = createFileRoute('/_layout/courses/$courseId/tasks/$taskId/')({
   component: TaskPage,
 })
 
 function TaskPage() {
+  const [message, setMessage] = useState("")
+  const [response, setResponse] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  async function handleAskAI(text?: string) {
+  const query = text || message
+
+  if (!query) return
+
+  setLoading(true)
+
+  try {
+    const data = await askAI(query)
+    setResponse(data.response)
+  } catch (e) {
+    console.error(e)
+  } finally {
+    setLoading(false)
+  }
+}
+
   return (
     <main className="flex gap-6">
       <div className="flex-[2] flex flex-col gap-6">
@@ -173,26 +196,47 @@ function TaskPage() {
           </h2>
 
           <p className="mb-6 text-sm opacity-90">
-            Я можу допомогти з User Flow, Sitemap або
-            структурою застосунку.
+            Я можу допомогти з User Flow, Sitemap або структурою застосунку.
           </p>
 
+          {/* quick buttons */}
           <div className="space-y-3">
-            <button className="w-full rounded-lg border border-white/20 bg-white/10 p-3 text-left transition hover:bg-white/20">
+            <button
+              onClick={() => handleAskAI("Що таке User Flow?")}
+              className="w-full rounded-lg border border-white/20 bg-white/10 p-3 text-left transition hover:bg-white/20"
+            >
               Що таке User Flow?
             </button>
 
-            <button className="w-full rounded-lg border border-white/20 bg-white/10 p-3 text-left transition hover:bg-white/20">
+            <button
+              onClick={() => handleAskAI("Як створити Sitemap?")}
+              className="w-full rounded-lg border border-white/20 bg-white/10 p-3 text-left transition hover:bg-white/20"
+            >
               Як створити Sitemap?
             </button>
           </div>
 
-          <div className="mt-6">
+          {/* input */}
+          <div className="mt-6 flex gap-2">
             <input
               type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               placeholder="Запитати AI..."
-              className="w-full rounded-lg border border-white/20 bg-white/10 p-3 text-white placeholder:text-white/60 outline-none"
+              className="flex-1 rounded-lg border border-white/20 bg-white/10 p-3 text-white placeholder:text-white/60 outline-none"
             />
+
+            <button
+              onClick={() => handleAskAI()}
+              className="rounded-lg bg-white/20 px-4 hover:bg-white/30"
+            >
+              →
+            </button>
+          </div>
+
+          {/* response */}
+          <div className="mt-6 rounded-lg bg-white/10 p-4 text-sm whitespace-pre-wrap">
+            {loading ? "AI думає..." : response}
           </div>
         </section>
       </aside>

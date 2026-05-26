@@ -2,9 +2,6 @@ import { createFileRoute } from "@tanstack/react-router"
 import {
   BookOpen,
   Calendar,
-  Code,
-  FlaskConical,
-  Globe,
   MoreVertical,
 } from "lucide-react"
 import { Link } from "@tanstack/react-router"

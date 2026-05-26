@@ -1,4 +1,3 @@
-
 import {
   createFileRoute,
   Outlet,
@@ -6,94 +5,171 @@ import {
   useMatches,
 } from "@tanstack/react-router"
 
-import { Footer } from "@/components/Common/Footer"
-import AppSidebar from "@/components/Sidebar/AppSidebar"
+import {
+  useEffect,
+  useState,
+} from "react"
+
+import { Footer }
+  from "@/components/Common/Footer"
+
+import AppSidebar
+  from "@/components/Sidebar/AppSidebar"
+
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 
-import { isLoggedIn } from "@/hooks/useAuth"
+import { isLoggedIn }
+  from "@/hooks/useAuth"
 
-export const Route = createFileRoute("/_layout")({
-  component: Layout,
+export const Route =
+  createFileRoute("/_layout")({
+    component: Layout,
 
-  beforeLoad: async () => {
+    beforeLoad: async () => {
 
-    if (!isLoggedIn()) {
+      if (!isLoggedIn()) {
 
-      throw redirect({
-        to: "/login",
-      })
-    }
-  },
-})
-
-const courses = [
-  {
-    id: 1,
-    title: "Вища математика",
-  },
-
-  {
-    id: 2,
-    title: "Алгоритми",
-  },
-
-  {
-    id: 3,
-    title: "Фізика",
-  },
-
-  {
-    id: 4,
-    title: "English for IT",
-  },
-]
+        throw redirect({
+          to: "/login",
+        })
+      }
+    },
+  })
 
 function Layout() {
 
   const matches = useMatches()
 
-  const breadcrumbs: string[] = []
+  const [
+    courseTitles,
+    setCourseTitles,
+  ] = useState<
+    Record<string, string>
+  >({})
 
-    matches.forEach((match) => {
+  useEffect(() => {
+
+    const fetchCourseTitles =
+      async () => {
+
+        const courseMatches =
+          matches.filter(
+            (match) =>
+              "courseId" in match.params,
+          )
+
+        for (
+          const match
+          of courseMatches
+        ) {
+
+          const courseId =
+            (
+              match.params as {
+                courseId: string
+              }
+            ).courseId
+
+          if (
+            !courseTitles[
+              courseId
+            ]
+          ) {
+
+            try {
+
+              const response =
+                await fetch(
+                  `http://127.0.0.1:8000/api/v1/courses/${courseId}`,
+                )
+
+              const data =
+                await response.json()
+
+              setCourseTitles(
+                (prev) => ({
+                  ...prev,
+                  [courseId]:
+                    data.name,
+                }),
+              )
+
+            } catch (error) {
+
+              console.error(
+                error,
+              )
+            }
+          }
+        }
+      }
+
+    fetchCourseTitles()
+
+  }, [matches])
+
+  const breadcrumbs:
+    string[] = []
+
+  matches.forEach(
+    (match) => {
 
       const staticTitle =
-        (match.staticData as {
-          title?: string
-        })?.title
+        (
+          match.staticData as {
+            title?: string
+          }
+        )?.title
 
       if (
         staticTitle &&
-        !breadcrumbs.includes(staticTitle)
+        !breadcrumbs.includes(
+          staticTitle,
+        )
       ) {
-        breadcrumbs.push(staticTitle)
+
+        breadcrumbs.push(
+          staticTitle,
+        )
       }
 
-      if ("courseId" in match.params) {
+      if (
+        "courseId"
+        in match.params
+      ) {
 
-        const courseId = (
-          match.params as {
-            courseId: string
-          }
-        ).courseId
+        const courseId =
+          (
+            match.params as {
+              courseId: string
+            }
+          ).courseId
 
-        const course = courses.find(
-          (c) =>
-            String(c.id) === courseId,
-        )
+        const courseTitle =
+          courseTitles[
+            courseId
+          ]
 
         if (
-          course?.title &&
-          !breadcrumbs.includes(course.title)
+          courseTitle &&
+          !breadcrumbs.includes(
+            courseTitle,
+          )
         ) {
-          breadcrumbs.push(course.title)
+
+          breadcrumbs.push(
+            courseTitle,
+          )
         }
       }
-    })
-    breadcrumbs.reverse()
+    },
+  )
+
+  breadcrumbs.reverse()
 
   return (
     <SidebarProvider>
@@ -110,31 +186,38 @@ function Layout() {
 
             <div className="flex items-center gap-2 text-sm">
 
-              {breadcrumbs.map((item, index) => (
+              {breadcrumbs.map(
+                (
+                  item,
+                  index,
+                ) => (
 
-                <div
-                  key={item}
-                  className="flex items-center gap-2"
-                >
-
-                  <span
-                    className={
-                      index === breadcrumbs.length - 1
-                        ? "font-semibold text-foreground"
-                        : "text-muted-foreground"
-                    }
+                  <div
+                    key={item}
+                    className="flex items-center gap-2"
                   >
-                    {item}
-                  </span>
 
-                  {index !== breadcrumbs.length - 1 && (
-
-                    <span className="text-muted-foreground">
-                      /
+                    <span
+                      className={
+                        index ===
+                        breadcrumbs.length - 1
+                          ? "font-semibold text-foreground"
+                          : "text-muted-foreground"
+                      }
+                    >
+                      {item}
                     </span>
-                  )}
-                </div>
-              ))}
+
+                    {index !==
+                      breadcrumbs.length - 1 && (
+
+                      <span className="text-muted-foreground">
+                        /
+                      </span>
+                    )}
+                  </div>
+                ),
+              )}
             </div>
           </div>
 
@@ -166,4 +249,3 @@ function Layout() {
 }
 
 export default Layout
-
