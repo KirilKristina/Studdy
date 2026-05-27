@@ -103,6 +103,78 @@ function TaskPage() {
 
   }, [taskId])
 
+  const [selectedFile, setSelectedFile] =
+    useState<File | null>(null)
+
+  const [uploading, setUploading] =
+    useState(false)
+
+  const [uploadResult, setUploadResult] =
+    useState<string | null>(null)
+
+  async function handleUpload() {
+
+    if (!selectedFile) {
+
+      return
+    }
+
+    setUploading(true)
+
+    try {
+
+      const formData = new FormData()
+
+      formData.append(
+        "file",
+        selectedFile,
+      )
+
+      const token =
+        localStorage.getItem("access_token")
+
+      const res = await fetch(
+        `http://127.0.0.1:8000/api/v1/courses/tasks/${taskId}/upload`,
+        {
+          method: "POST",
+
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+
+          body: formData,
+        },
+      )
+
+      if (!res.ok) {
+
+        const errText = await res.text()
+
+        console.log("UPLOAD ERROR:", errText)
+
+        throw new Error("Upload failed")
+      }
+
+      const data =
+        await res.json()
+
+      setUploadResult(
+        `Файл ${data.filename} успішно завантажений`,
+      )
+
+    } catch (e) {
+
+      console.error(e)
+
+      setUploadResult(
+        "Помилка завантаження",
+      )
+
+    } finally {
+
+      setUploading(false)
+    }
+  }
   async function handleAskAI(
     text?: string,
   ) {
@@ -277,18 +349,53 @@ function TaskPage() {
 
             <p className="mb-6 text-muted-foreground">
 
-              Перетягніть файл або натисніть кнопку
-            </p>
-
-            <button className="rounded-lg bg-primary px-6 py-3 text-primary-foreground transition hover:opacity-90">
-
-              Обрати файл
-            </button>
-
-            <p className="mt-4 text-sm text-muted-foreground">
-
               PDF, DOCX, ZIP до 50MB
             </p>
+
+            <input
+              type="file"
+              onChange={(e) => {
+
+                const file =
+                  e.target.files?.[0]
+
+                if (file) {
+
+                  setSelectedFile(file)
+                }
+              }}
+              className="mb-4"
+            />
+
+            {selectedFile && (
+
+              <p className="mb-4 text-sm">
+
+                {selectedFile.name}
+              </p>
+            )}
+
+            <button
+              onClick={handleUpload}
+              disabled={
+                !selectedFile ||
+                uploading
+              }
+              className="rounded-lg bg-primary px-6 py-3 text-primary-foreground transition hover:opacity-90 disabled:opacity-50"
+            >
+
+              {uploading
+                ? "Завантаження..."
+                : "Завантажити"}
+            </button>
+
+            {uploadResult && (
+
+              <p className="mt-4 text-sm">
+
+                {uploadResult}
+              </p>
+            )}
           </div>
         </section>
 

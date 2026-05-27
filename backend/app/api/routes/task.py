@@ -1,52 +1,78 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
-from app.api import deps
-from app.models import Task, TaskBase
 from sqlmodel import select
+from app.api import deps
+from app.models import Task, File as DBFile
 
-router = APIRouter()
+router = APIRouter(prefix="/api/v1/courses/tasks")
 
-@router.get("/{task_id}", response_model=Task)
+# GET task
+@router.get("/{task_id}")
 def read_task(
     task_id: int,
     session=Depends(deps.get_db),
 ):
     task = session.get(Task, task_id)
-
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
     return task
 
-@router.patch("/{task_id}/notes")
-def update_notes(
-    task_id: int,
-    notes: str,
-    session=Depends(deps.get_db),
-    current_user=Depends(deps.get_current_active_user),
-):
-    task = session.get(Task, task_id)
-    if not task or task.owner_id != current_user.id:
-        raise HTTPException(status_code=404, detail="Task not found")
-    
-    task.notes = notes
-    session.add(task)
-    session.commit()
-    return {"status": "success"}
+
+# UPDATE notes
+import uuid
 
 @router.post("/{task_id}/upload")
 async def upload_report(
-    task_id: int,
+    task_id: uuid.UUID,
     file: UploadFile = File(...),
     session=Depends(deps.get_db),
-    current_user=Depends(deps.get_current_active_user),
+    current_user=Depends(deps.get_current_active_superuser),
 ):
-    # Логіка збереження файлу (наприклад, у папку uploads/)
-    file_location = f"uploads/{current_user.id}_{task_id}_{file.filename}"
-    with open(file_location, "wb+") as file_object:
-        file_object.write(file.file.read())
-    
     task = session.get(Task, task_id)
-    task.file_path = file_location
+
+    if not task or task.owner_id != current_user.id:
+        raise HTTPException(status_code=404, detail="Task not found")
+
     session.add(task)
     session.commit()
-    
-    return {"filename": file.filename}
+
+    return {"status": "success"}
 
 
+from fastapi import APIRouter, Depends, UploadFile, File, HTTPException
+from app.api import deps
+from app.models import Task, File as DBFile
+import uuid
+
+router = APIRouter(
+    prefix="/courses/tasks",
+    tags=["tasks"],
+)
+
+@router.post("/{task_id}/upload")
+async def upload_report(
+    task_id: uuid.UUID,
+    file: UploadFile = File(...),
+    session=Depends(deps.get_db),
+    current_user=Depends(deps.get_current_user),
+):
+    task = session.get(Task, task_id)
+
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    content = await file.read()
+
+    db_file = DBFile(
+        name=file.filename,
+        size=len(content),
+        data=content,
+        user_id=current_user.id,
+    )
+
+    session.add(db_file)
+    session.commit()
+
+    return {
+        "status": "success",
+        "filename": file.filename,
+    }
